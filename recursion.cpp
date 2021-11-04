@@ -1,4 +1,6 @@
 #include <iostream>
+#include <vector>
+#include <string>
 
 using namespace std;
 
@@ -56,8 +58,47 @@ int fibonacciRecursive(int n) {
 
 }
 
+bool isPalindromeRecursive(string word) {
+
+    if (word.size() <= 1)
+        return true;
+
+    return ((word[0] == word[word.size() - 1]) &&
+            (isPalindromeRecursive(word.substr(1, word.size() - 2))));
+}
 
 
+vector<string> permutations(string word) {
+
+    vector<string> result;
+
+    if (word.size() == 1) {
+        result.push_back(word);
+        return result;
+    }
+
+    for (int i=0; i<word.size(); i++) {
+
+        string letterToRemove = word.substr(i,1);
+        string shorterWord = word.substr(0,i) + word.substr(i+1,word.size() - i - 1);
+        vector<string> shorterPerms= permutations(shorterWord);
+        for (string sw : shorterPerms) {
+            result.push_back(letterToRemove + sw);
+        }
+
+    }
+
+    return result;
+}
+
+int maze[6][6] =
+    {
+        {2, 2, 2, 0, 0, 0},
+        {0, 0, 2, 0, 0, 0},
+        {0, 0, 3, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0}};
 
 int main() {
 
@@ -101,4 +142,10 @@ int main() {
     cout << "fibonacciRecursive(5) = " << fibonacciRecursive(5) << endl;
     cout << "fibonacciRecursive(10) = " << fibonacciRecursive(10) << endl;
     // cout << "fibonacciRecursive(50) = " << fibonacciRecursive(50) << endl;
+
+    vector<string> perms1 = permutations("Dionel");
+    for (string w : perms1) {
+        cout << "Next permutation: " << w << endl;
+    }
+
 }
