@@ -93,8 +93,8 @@ vector<string> permutations(string word) {
 
 int maze[6][6] =
     {
-        {2, 2, 2, 0, 0, 3},
-        {0, 0, 2, 0, 0, 0},
+        {2, 2, 2, 2, 2, 3},
+        {0, 0, 2, 0, 0, 2},
         {0, 0, 2, 0, 0, 2},
         {2, 2, 2, 0, 2, 2},
         {0, 0, 2, 2, 2, 0},
@@ -103,47 +103,51 @@ int maze[6][6] =
 /* Returns true iff there is a path to cheese from position (row,col)
  *
  */
-bool findCheese(int row, int col) {
+string findCheese(int row, int col) {
 
     if (row < 0 || row > 5) {
         // Row outside maze
-        return false;
+        return "";
     }
     if (col < 0 || col > 5) {
         // Column outside maze
-        return false;
+        return "";
     }
     if (maze[row][col] == 0) {
         // Hit a wall
-        return false;
+        return "";
     }
     if (maze[row][col] == 1) {
         // Position visited previously
-        return false;
+        return "";
     }
     if (maze[row][col] == 3) {
         // Found cheese!!!
-        return true;
+        return ("[" + to_string(row) + "," + to_string(col) + "]");
     }
     // Position is open
     maze[row][col] = 1;
     // Try going UP
-    if (findCheese(row-1,col)) {
-        return true;
+    string path = findCheese(row-1,col);
+    if (path.size() > 0) {
+        return "[" + to_string(row) + "," + to_string(col) + "]" + "," + path;
     }
     // Try going RIGHT
-    if (findCheese(row, col+1)) {
-        return true;
+    path = findCheese(row, col+1);
+    if (path.size() > 0) {
+        return "[" + to_string(row) + "," + to_string(col) + "]" + "," + path;
     }
     // Try going DOWN
-    if (findCheese(row+1,col)) {
-        return true;
+    path = findCheese(row+1,col);
+    if (path.size() > 0) {
+        return "[" + to_string(row) + "," + to_string(col) + "]" + "," + path;
     }
     // Try going LEFT
-    if (findCheese(row, col-1)) {
-        return true;
+    path = findCheese(row, col-1);
+    if (path.size() > 0) {
+        return "[" + to_string(row) + "," + to_string(col) + "]" + "," + path;
     }
-    return false;
+    return "";
 }
 
 int main() {
@@ -194,6 +198,10 @@ int main() {
         cout << "Next permutation: " << w << endl;
     }
 
-    cout << "Cheese Found? " << (findCheese(0,0) ? "true" : "false") << endl;
-
+    string result = findCheese(0, 0);
+    if (result.size() > 0) {
+        cout << "Path to cheese found at: " << result << endl;
+    } else {
+        cout << "Path to cheese not found.  I am literally dead :(" << endl;
+    }
 }
