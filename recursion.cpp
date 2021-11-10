@@ -93,12 +93,58 @@ vector<string> permutations(string word) {
 
 int maze[6][6] =
     {
-        {2, 2, 2, 0, 0, 0},
+        {2, 2, 2, 0, 0, 3},
         {0, 0, 2, 0, 0, 0},
-        {0, 0, 3, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0},
+        {0, 0, 2, 0, 0, 2},
+        {2, 2, 2, 0, 2, 2},
+        {0, 0, 2, 2, 2, 0},
         {0, 0, 0, 0, 0, 0}};
+
+/* Returns true iff there is a path to cheese from position (row,col)
+ *
+ */
+bool findCheese(int row, int col) {
+
+    if (row < 0 || row > 5) {
+        // Row outside maze
+        return false;
+    }
+    if (col < 0 || col > 5) {
+        // Column outside maze
+        return false;
+    }
+    if (maze[row][col] == 0) {
+        // Hit a wall
+        return false;
+    }
+    if (maze[row][col] == 1) {
+        // Position visited previously
+        return false;
+    }
+    if (maze[row][col] == 3) {
+        // Found cheese!!!
+        return true;
+    }
+    // Position is open
+    maze[row][col] = 1;
+    // Try going UP
+    if (findCheese(row-1,col)) {
+        return true;
+    }
+    // Try going RIGHT
+    if (findCheese(row, col+1)) {
+        return true;
+    }
+    // Try going DOWN
+    if (findCheese(row+1,col)) {
+        return true;
+    }
+    // Try going LEFT
+    if (findCheese(row, col-1)) {
+        return true;
+    }
+    return false;
+}
 
 int main() {
 
@@ -147,5 +193,7 @@ int main() {
     for (string w : perms1) {
         cout << "Next permutation: " << w << endl;
     }
+
+    cout << "Cheese Found? " << (findCheese(0,0) ? "true" : "false") << endl;
 
 }
